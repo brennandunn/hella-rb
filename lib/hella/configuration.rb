@@ -25,7 +25,7 @@ module Hella
     end
     
     def log
-      hcall(:status)['log_entries'].map { |hsh| Log.new(hsh.keys.first, hsh.values.first) }
+      hcall(:status)['log_entries'].reverse.map { |hsh| Log.new(hsh.keys.first, hsh.values.first) }
     end
     
     def say(message)

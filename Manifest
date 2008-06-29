@@ -1,4 +1,5 @@
 bin/hellarb
+hella-rb.gemspec
 lib/hella/base.rb
 lib/hella/configuration.rb
 lib/hella/daemon.rb

@@ -16,6 +16,17 @@ module Hella
           case id_or_url
           when Integer, /\d+/
             hcall(:enqueuenewzbin, id_or_url)
+          when /safari|firefox/i
+            begin
+              require 'hpricot'
+              require 'appscript'
+              self.class.send :include, Appscript
+              id, title = find_from_browser(id_or_url)
+              add(id)
+              say("Fetching ID #{id}: #{title} from #{id_or_url}")
+            rescue LoadError
+              die('You need appscript installed to check based on a browser')
+            end
           else
             hcall(:enqueue, id_or_url)
           end
@@ -38,6 +49,22 @@ module Hella
       
       def method_missing(method, *args, &block)
         @ref.send(method, *args, &block)
+      end
+      
+      
+      private
+      
+      def find_from_browser(browser)
+        if browser = app(browser)
+          begin
+            url, source = browser.document.get.first.URL.get, browser.document.get.first.source.get
+            url =~ /(\d+)/ ; id = $1.strip
+            title = Hpricot(source).at('title').to_plain_text
+            title =~ /:(.*)$/ ; parsed_title = $1.strip
+            [id, parsed_title]
+          rescue
+          end
+        end
       end
       
     end
