@@ -4,8 +4,15 @@ require 'trollop' ; include Trollop
 require 'yaml'
 
 $interactive = true
+
+$opts = options do
+  version "hella-rb #{Hella::Version.to_s}"
+  opt :config, 'Configuration file', :default => File.expand_path('~/.hellarb')
+end
+
 cmd = ARGV.shift or die 'expecting a command'
 hella = Hella.connect
+hella.configuration[:dotfile] = $opts[:config]
 
 unless hella.connected?
   return 'Hellanzb is not online. Run `hellarb start` to attempt to start it'

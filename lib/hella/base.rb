@@ -1,4 +1,5 @@
 require 'xmlrpc/client'
+require 'hella/version'
 require 'hella/configuration'
 require 'hella/system'
 require 'hella/daemon'
@@ -11,15 +12,6 @@ require 'hella/queue'
 
 module Hella
   attr_accessor :instance
-  
-  class Version
-    MAJOR, MINOR, TINY = 0, 0, 1
-    class << self
-      def to_s
-        [MAJOR, MINOR, TINY].join('.')
-      end
-    end
-  end
   
   class Base
     include Configuration, System, Daemon, Queue
