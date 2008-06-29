@@ -22,7 +22,7 @@ module Hella
   end
   
   class Base
-    include Configuration, System, Queue
+    include Configuration, System, Daemon, Queue
 
     DEFAULTS = { :username => 'hellanzb', :password => 'changeme', :host => 'localhost', :port => 8760, :dotfile => File.expand_path('~/.hellarb') }
     
@@ -36,10 +36,18 @@ module Hella
       end
     end
     
-    def call(method, *args)
+    def hcall(method, *args)
       if connection
-        connection.gateway.call(method.to_s, *args)
+        begin
+          connection.gateway.call(method.to_s, *args)
+        rescue
+          raise_or_die('Cannot connect to Hellanzb via XMLRPC')
+        end
       end
+    end
+    
+    def raise_or_die(message)
+      defined?(:die) ? die(message) : raise(message)
     end
     
   end

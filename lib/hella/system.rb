@@ -16,6 +16,10 @@ module Hella
       self.connection = Connection.new(options)          
     end
     
+    def connected?
+      true # TODO
+    end
+    
   end
   
   class Connection

@@ -1,23 +1,27 @@
-module Hellanzb
+module Hella
   module Daemon
     
     def cancel
-      call(:cancel)
+      hcall(:cancel)
       say('Halting downloads')
     end
     
     def pause
-      call(:pause)
+      hcall(:pause)
       say('Pausing downloads')
     end
     
     def paused?
-      call(:status)['is_paused']
+      hcall(:status)['is_paused']
     end
     
     def resume
-      call(:continue)
+      hcall(:continue)
       say('Resuming downloads')
+    end
+    
+    def toggle
+      paused? ? resume : pause
     end
     
   end

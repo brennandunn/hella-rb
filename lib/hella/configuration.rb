@@ -7,7 +7,7 @@ module Hella
     def load_rc
       file = configuration[:dotfile]
       if File.exists?(file)
-        YAML.load(file)
+        File.open(file) { |f| YAML.load(f) }
       end
     end
     
@@ -17,14 +17,15 @@ module Hella
           :host => 'localhost', 
           :port => 8760, 
           :username => 'hellanzb', 
-          :password => 'changeme'
+          :password => 'changeme', 
+          :binary => "#{`which hellanzb.py`.gsub("\n", '')}"
         }, out)
       end
       say "Wrote configuration file to #{configuration[:dotfile]}"
     end
     
     def log
-      call(:status)['log_entries'].map { |hsh| Log.new(hsh.keys.first, hsh.values.first) }
+      hcall(:status)['log_entries'].map { |hsh| Log.new(hsh.keys.first, hsh.values.first) }
     end
     
     def say(message)
